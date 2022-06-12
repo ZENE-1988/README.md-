@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="2d6e9cc1-971d-4091-a6b4-cc7f20b4b343" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="a48e9877-03c4-4349-b326-6ce1a1ee14d1" >
+		<db:my-sql-connection host="localhost" port="3306" user="root" password="mule" />
+	</db:config>
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="8a950eff-276a-43f9-ab46-7b91db7c7410" >
+		<http:request-connection host="fsd-test-emp-sapi.us-e2.cloudhub.io" port="80" />
+	</http:request-config>
+	<db:config name="Database_Config1" doc:name="Database Config" doc:id="ec3a8fa8-ee54-491f-8087-d94544eaebcd" >
+		<db:my-sql-connection host="localhost" port="3306" user="root" password="mule" />
+	</db:config>
+	<flow name="employeeFlow" doc:id="c6bd2cd4-53de-4218-8947-5983b7f578b8" >
+		<http:listener doc:name="Listener" doc:id="e4423f9e-f68e-4f69-872c-9f38279515aa" config-ref="HTTP_Listener_config" path="/employee"/>
+		<logger level="INFO" doc:name="Logger" doc:id="1853b066-9d5a-417e-aa65-8d0d05a38786" message="flow stars:#[payload]"/>
+		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="e5be31f4-4c87-4830-9da1-abd5e8ccb09b" variableName="empPayload"/>
+		<db:insert doc:name="Insert" doc:id="ecbecbe3-2c36-4e37-aed4-d73fa6055e9d" config-ref="Database_Config1">
+			<db:sql ><![CDATA[insert into gelila.zenebe(emp_id,emp_name,emp_status,emp_address) values(:emp_id,:emp_name,:emp_status,:emp_address)]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+		emp_id: payload.employee.id,
+		emp_name: payload.employee.name,
+		emp_status: payload.employee.status,
+		emp_address: payload.employee.address
+	}]]]></db:input-parameters>
+		</db:insert>
+		<ee:transform doc:name="Transform Message" doc:id="a18fa6ee-b6dd-45cb-96e9-e6860204c72d" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	empid: vars.empPayload.employee.id,
+	empname:vars.empPayload.employee.name,
+	status: vars.empPayload.employee.status
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<http:request method="POST" doc:name="Request" doc:id="648eed52-ee96-402e-8eae-730e5e281341" config-ref="HTTP_Request_configuration" path="/emp-sapi/add-employee"/>
+	</flow>
+</mule>

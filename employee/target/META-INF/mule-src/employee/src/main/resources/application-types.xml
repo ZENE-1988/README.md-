@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="input" format="java">
+      <types:shape format="raml"><![CDATA[#%RAML 1.0 DataType
+type: string]]></types:shape>
+    </types:type>
+    <types:type name="input1" format="xml">
+      <types:example format="xml" element="employee" location="examples/zene.xml"/>
+    </types:type>
+    <types:type name="output" format="json">
+      <types:shape format="weave" example="examples/gela.json"><![CDATA[%dw 2.0
+
+type output = {|
+  empid: Number {"typeId": "int"}, 
+  empname: String, 
+  status: String
+|} {"example": "{\\\"empid\\\":100,\\\"empname\\\":\\\"FSD\\\",\\\"status\\\":\\\"A\\\"}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="Newinput" format="xml">
+      <types:example format="xml" element="employee" location="examples/new .xml"/>
+    </types:type>
+    <types:type name="OUTPUT" format="json">
+      <types:shape format="weave" example="examples/gela-1.json"><![CDATA[%dw 2.0
+
+type OUTPUT = {|
+  empid: Number {"typeId": "int"}, 
+  empname: String, 
+  status: String
+|} {"example": "{\\\"empid\\\":100,\\\"empname\\\":\\\"FSD\\\",\\\"status\\\":\\\"A\\\"}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="ouputdb" format="xml">
+      <types:example format="xml" element="root" location="examples/latest.xml"/>
+    </types:type>
+    <types:type name="inputdb" format="xml">
+      <types:example format="xml" element="employee" location="examples/new -1.xml"/>
+    </types:type>
+    <types:type name="NEWOUTOUTDB" format="java">
+      <types:shape format="raml"><![CDATA[#%RAML 1.0 DataType
+type: string]]></types:shape>
+    </types:type>
+    <types:type name="newoutput" format="java">
+      <types:shape format="raml"><![CDATA[#%RAML 1.0 DataType
+type: string]]></types:shape>
+    </types:type>
+    <types:type name="zene" format="java">
+      <types:shape format="raml"><![CDATA[#%RAML 1.0 DataType
+type: string]]></types:shape>
+    </types:type>
+    <types:type name="zenu" format="java">
+      <types:shape format="raml"><![CDATA[#%RAML 1.0 DataType
+type: string]]></types:shape>
+    </types:type>
+    <types:type name="final" format="xml">
+      <types:example format="xml" element="root" location="examples/latest-1.xml"/>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#a18fa6ee-b6dd-45cb-96e9-e6860204c72d">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="Newinput"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="OUTPUT"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#ecbecbe3-2c36-4e37-aed4-d73fa6055e9d">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="inputdb"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+    <types:operation-declaration>
+      <types:inputs>
+        <types:parameter name="inputParameters" type="final"/>
+      </types:inputs>
+    </types:operation-declaration>
+  </types:enrichment>
+</types:mule>

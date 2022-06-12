@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<employee>
+   <empid>100</empid>
+   <empname>FSD</empname>
+   <status>A</status>
+</employee>

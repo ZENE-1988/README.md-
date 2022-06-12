@@ -1,0 +1,32 @@
+{
+  "configs": [
+    "employee.xml"
+  ],
+  "secureProperties": [],
+  "redeploymentEnabled": true,
+  "name": "com.mycompany:employee:1.0.0-SNAPSHOT",
+  "minMuleVersion": "4.3.0",
+  "requiredProduct": "MULE_EE",
+  "classLoaderModelLoaderDescriptor": {
+    "id": "mule",
+    "attributes": {
+      "exportedPackages": [],
+      "exportedResources": [
+        "application-types.xml",
+        "employee.xml",
+        "examples/gela-1.json",
+        "examples/gela.json",
+        "examples/latest-1.xml",
+        "examples/latest.xml",
+        "examples/new -1.xml",
+        "examples/new .xml",
+        "examples/zene.xml",
+        "log4j2.xml"
+      ]
+    }
+  },
+  "bundleDescriptorLoader": {
+    "id": "mule",
+    "attributes": {}
+  }
+}
